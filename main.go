@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/rand"
 	"errors"
+	"flag"
 	"fmt"
 	"html/template"
 	"math"
@@ -69,6 +70,11 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var err error
+	// commandline flags
+	host := flag.String("host", "localhost:3000", "give host:port value")
+
+	// parse commandline flags
+	flag.Parse()
 
 	// generate otp tokens asynchronously
 	go generate(DataStore)
@@ -82,9 +88,9 @@ func main() {
 
 	// route GET to /verify through pageHandler
 	http.HandleFunc("/verify", pageHandler)
-	fmt.Println("Starting the server on :3333...")
+	fmt.Println("Starting the server on " + *host + "...")
 
-	err = http.ListenAndServe(":3333", nil)
+	err = http.ListenAndServe(*host, nil)
 	if errors.Is(err, http.ErrServerClosed) {
 		fmt.Printf("server closed\n")
 	} else if err != nil {
