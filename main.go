@@ -13,6 +13,7 @@ import (
 	"time"
 )
 
+// start verification page content
 const home = `
 <!doctype html>
 	<html lang="en">
@@ -26,7 +27,8 @@ const home = `
 		<h2>Refresh at: {{.Refresh}}<h2>
 	</body>
 </html>
-` // verification page content
+`
+// end verification page content
 
 var page *template.Template
 var DataStore = make([]string, 2)
@@ -114,7 +116,3 @@ func main() {
 		os.Exit(1)
 	}
 }
-
-
-
-
