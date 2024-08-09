@@ -8,7 +8,7 @@ a 6 digit crypto-random token and a refresh notice.
 -host specify host and port in the form host:port
 
 #### Roadmap:
-Add flag to set token generation delay.  
+Add flag to set token generation delay. | ✔ |  
 Add flag to set token length.  
 Add flag to set route (current default /verify).   
 
