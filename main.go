@@ -13,8 +13,8 @@ import (
 	"time"
 )
 
-const otpLen = 6
-const delay = 30 * time.Second
+const otpLen = 6 // length of token to be returned
+const delay = 30 * time.Second // refresh rate of token generation
 const home = `
 <!doctype html>
 	<html lang="en">
@@ -28,7 +28,7 @@ const home = `
 		<h2>Refresh at: {{.Refresh}}<h2>
 	</body>
 </html>
-`
+` // verification page content
 
 var page *template.Template
 var DataStore = make([]string, 2)
@@ -83,7 +83,7 @@ func pageHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	var err error
 	// commandline flags
-	host := flag.String("host", "localhost:3000", "give host:port value")
+	host := flag.String("host", ":3000", "give host:port value, default :3000")
 
 	// parse commandline flags
 	flag.Parse()
