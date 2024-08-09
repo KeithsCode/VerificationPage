@@ -7,7 +7,7 @@ a 6 digit crypto-random token and a refresh notice.
 #### Flags:
 ```code
 -host   [string] specify host and port in the form host:port  
--route  [string] specify the server route in the frm /route  
+-route  [string] specify the server route in the form /route  
 -delay  [int]    specify a token generation delay  
 -length [int]    specify int the length of token provided  
 ```
