@@ -13,7 +13,6 @@ import (
 	"time"
 )
 
-//const otpLen = 6 // length of token to be returned
 const home = `
 <!doctype html>
 	<html lang="en">
@@ -87,6 +86,7 @@ func main() {
 	host := flag.String("host", ":3000", "give host:port value, default :3000")
 	delay := flag.Int("delay", 30, "token generation delay in seconds")
 	length := flag.Int("length", 6, "token length")
+	route := flag.String("route", "/", "http route to server")
 
 	// parse commandline flags
 	flag.Parse()
@@ -102,9 +102,9 @@ func main() {
 	}
 
 	// route GET to /verify through pageHandler
-	http.HandleFunc("/verify", pageHandler)
+	http.HandleFunc(*route, pageHandler)
 	fmt.Printf("Token generation delay: %d\n", *delay)
-	fmt.Println("Starting the server on " + *host + "...")
+	fmt.Println("Starting the server on " + *host + *route + "...")
 
 	err = http.ListenAndServe(*host, nil)
 	if errors.Is(err, http.ErrServerClosed) {
