@@ -24,15 +24,16 @@ const home = `
 	</head>
 	<body>
 		<h1>Verification Code</h1>
-		<h2>{{.}}<h2>
+		<h2>{{.Token}}<h2>
+		<h2>Refresh at: {{.Refresh}}<h2>
 	</body>
 </html>
 `
 
 var page *template.Template
-var DataStore = make([]string, 1)
+var DataStore = make([]string, 2)
 
-// generateOtp creates a 6-digit crypto-random token
+// generateOtp creates a n-digit crypto-random token
 func generateOtp(max uint32) string {
 	bi, err := rand.Int(
 		rand.Reader,
@@ -47,11 +48,17 @@ func generateOtp(max uint32) string {
 
 // generate updates a slice with a crypto-random number of otpLen
 func generate(data []string) {
+	// set an initial state
 	timer := time.NewTicker(delay)
 	data[0] = generateOtp(otpLen)
 
 	for range timer.C {
+		// add delay to time now for reporting the refresh time to the template
+		t := time.Now()
+		refresh := t.Add(delay)
+
 		data[0] = generateOtp(otpLen)
+		data[1] = refresh.Format("15:04:05")
 	}
 }
 
@@ -59,9 +66,14 @@ func generate(data []string) {
 func pageHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
 
-	data := "caching number"
+	var data struct {
+		Token string
+		Refresh string
+	}
 
-	data = string(DataStore[0])
+	data.Token   = DataStore[0]
+	data.Refresh = DataStore[1]
+
 	err := page.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
