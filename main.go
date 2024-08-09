@@ -13,8 +13,7 @@ import (
 	"time"
 )
 
-const otpLen = 6 // length of token to be returned
-//const delay = 30 * time.Second // refresh rate of token generation
+//const otpLen = 6 // length of token to be returned
 const home = `
 <!doctype html>
 	<html lang="en">
@@ -47,7 +46,8 @@ func generateOtp(max uint32) string {
 }
 
 // generate updates a slice with a crypto-random number of otpLen
-func generate(data []string, delay time.Duration) {
+func generate(data []string, delay time.Duration, length int) {
+	otpLen := uint32(length)
 	// set an initial state
 	timer := time.NewTicker(delay)
 	data[0] = generateOtp(otpLen)
@@ -86,12 +86,13 @@ func main() {
 	// commandline flags
 	host := flag.String("host", ":3000", "give host:port value, default :3000")
 	delay := flag.Int("delay", 30, "token generation delay in seconds")
+	length := flag.Int("length", 6, "token length")
 
 	// parse commandline flags
 	flag.Parse()
 
 	// generate otp tokens asynchronously
-	go generate(DataStore, time.Duration(*delay) * time.Second)
+	go generate(DataStore, time.Duration(*delay) * time.Second, *length)
 
 	// parse constant into page data
 	page, err = template.New("verify.gohtml").Parse(home)
